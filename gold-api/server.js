@@ -9,9 +9,15 @@ app.use(prometheusApiMetrics());
 
 // API để trả về giá vàng
 app.get('/api/gold', async (req, res) => {
-  // Giả lập giá vàng (có thể kết nối API thực tế nếu muốn)
-  const goldPrice = { gold_price: 5600000 }; // Giá vàng giả lập
-  res.json(goldPrice);
+    try {
+      const response = await axios.get('http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v');
+      const SJCdata = response.data.DataList.Data.find(item => item["@row"] === "7"); // Lấy dữ liệu vàng SJC từ API thực tế
+      const goldPrice = SJCdata['@pb_7'] // Lấy giá mua vào
+      res.json(goldPrice); // Trả về dữ liệu
+    } catch (error) {
+      console.error('Error fetching gold price:', error);
+      res.status(500).json({ error: 'Unable to fetch gold price' });
+    }
 });
 
 // Khởi động server
