@@ -1,8 +1,7 @@
-CREATE TABLE ServerHealth (
+CREATE TABLE ServerHealths (
   id INT AUTO_INCREMENT PRIMARY KEY,
   cpuUsage FLOAT NOT NULL,
   memoryUsage FLOAT NOT NULL,
   romUsage FLOAT NOT NULL,
-  bandwidth VARCHAR(255) NOT NULL,
-  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  bandwidth VARCHAR(255) NOT NULL
 );
