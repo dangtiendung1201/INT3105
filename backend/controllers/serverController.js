@@ -1,31 +1,34 @@
 import ServerHealth from '../models/ServerHealth.js';
-import { loadavg, totalmem, freemem } from 'os';
+import os, { loadavg, totalmem, freemem } from 'os';
 import diskusage from 'diskusage';
 import systeminformation from 'systeminformation';
 import path from 'path';
 
 export async function checkServer(req, res) {
-  // Get CPU usage (1 minute load average)
-  const cpuUsage = loadavg()[0];
+  // Get CPU usage (1 minute load average) and convert to percentage
+  const cpuUsage = (loadavg()[0] / os.cpus().length) * 100;
 
-  // Get Memory usage
-  const memoryUsage = (totalmem() - freemem()) / totalmem();
+  // Get Memory usage and convert to GB
+  const totalMemoryGB = totalmem() / (1024 ** 3);
+  const freeMemoryGB = freemem() / (1024 ** 3);
+  const memoryUsage = totalMemoryGB - freeMemoryGB;
 
-  // Get Disk usage (on the system's root directory, or specify any other directory)
+  // Get Disk usage (on the system's root directory, or specify any other directory) and convert to GB
   const diskInfo = diskusage.checkSync(path.parse(process.cwd()).root);
-  const romUsage = (diskInfo.total - diskInfo.free) / diskInfo.total;
+  const totalDiskGB = diskInfo.total / (1024 ** 3);
+  const freeDiskGB = diskInfo.free / (1024 ** 3);
+  const romUsage = totalDiskGB - freeDiskGB;
 
-  // Fetch network stats (sent and received bytes)
+  // Fetch network stats (sent and received bytes) and convert to GB
   const networkStats = await systeminformation.networkStats();
 
   // For simplicity, assuming you have a single network interface
   const netStats = networkStats[0];  // The first network interface, you can adjust this if needed
 
-  // Calculate bandwidth usage (in bytes)
-  const bytesSent = netStats.tx_bytes;
-  const bytesReceived = netStats.rx_bytes;
-
-  const bandwidth = bytesSent + bytesReceived;
+  // Calculate bandwidth usage (in bytes) and convert to GB
+  const bytesSentGB = netStats.tx_bytes / (1024 ** 3);
+  const bytesReceivedGB = netStats.rx_bytes / (1024 ** 3);
+  const bandwidth = bytesSentGB + bytesReceivedGB;
 
   // Save server health data into database
   await ServerHealth.create({ cpuUsage, memoryUsage, romUsage, bandwidth });
