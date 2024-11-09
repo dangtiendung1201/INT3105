@@ -12,7 +12,7 @@ export async function checkServer(req, res) {
   const memoryUsage = (totalmem() - freemem()) / totalmem();
 
   // Get Disk usage (on the system's root directory, or specify any other directory)
-  const diskInfo = diskusage.checkSync(path.parse(process.cwd()).root);  // e.g., on Linux `/`, or on Windows `C:\\`
+  const diskInfo = diskusage.checkSync(path.parse(process.cwd()).root);
   const romUsage = (diskInfo.total - diskInfo.free) / diskInfo.total;
 
   // Fetch network stats (sent and received bytes)

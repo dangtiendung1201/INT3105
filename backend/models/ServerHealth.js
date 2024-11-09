@@ -22,6 +22,8 @@ const ServerHealth = db.define('ServerHealth', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   }
+}, {
+  timestamps: false
 });
 
 export default ServerHealth;
