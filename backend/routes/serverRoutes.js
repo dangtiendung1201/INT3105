@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import { checkServer } from '../controllers/serverController.js';
 
-router.post('/check', checkServer);
+router.get('/check', checkServer);
+// router.get('/socket', checkServerSocket);
 
 export default router;
