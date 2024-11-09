@@ -17,8 +17,9 @@ const ApiHealth = db.define('ApiHealth', {
   timestamp: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
-  }
+  },
+}, {
+  timestamps: false
 });
 
 export default ApiHealth;
-export const create = ApiHealth.create;

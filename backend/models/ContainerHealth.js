@@ -29,7 +29,9 @@ const ContainerHealth = db.define('ContainerHealth', {
   timestamp: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
-  }
+  },
+}, {
+  timestamps: false
 });
 
 export default ContainerHealth;

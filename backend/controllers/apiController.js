@@ -1,4 +1,4 @@
-import { create } from '../models/ApiHealth.js';
+import create from '../models/ApiHealth.js';
 import axios from 'axios';
 
 export async function checkApi(req, res) {
