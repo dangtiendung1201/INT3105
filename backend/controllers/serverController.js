@@ -34,9 +34,6 @@ export async function checkServer(res) {
     const bytesReceivedGB = netStats.rx_bytes / (1024 ** 3);
     const bandwidth = bytesSentGB + bytesReceivedGB;
 
-    // Save server health data into database
-    await ServerHealth.create({ cpuUsage, memoryUsage, romUsage, bandwidth });
-
     // Send response with CPU, memory, and disk usage
     res.json({ cpuUsage, memoryUsage, romUsage, bandwidth });
     console.log({ cpuUsage, memoryUsage, romUsage, bandwidth });
@@ -58,5 +55,6 @@ socket.on('disconnect', () => {
 socket.on('checkServer', async (msg) => {
   console.log('message from server: ' + msg);
   const result = await checkServer({ json: () => {}, status: () => ({ json: () => {} }) });
-  console.log(result);
+  // console.log(result);
+  await ServerHealth.writeData(result.cpuUsage, result.memoryUsage, result.romUsage, result.bandwidth);
 });

@@ -1,29 +1,13 @@
-import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
-const ServerHealth = db.define('ServerHealth', {
-  cpuUsage: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  memoryUsage: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  romUsage: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  bandwidth: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  timestamp: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+class ServerHealth {
+  static async writeData(cpuUsage, memoryUsage, romUsage, bandwidth) {
+    const measurement = 'server_health';
+    const tags = { host: 'server1' };
+    const fields = { cpuUsage, memoryUsage, romUsage, bandwidth };
+    console.log('hihi');
+    await db.sendToInfluxDB(measurement, tags, fields);
   }
-}, {
-  timestamps: false
-});
+}
 
 export default ServerHealth;
