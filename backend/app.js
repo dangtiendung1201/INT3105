@@ -20,7 +20,7 @@ app.use(json());
 // app.use('/container', containerRoutes);
 app.use('/server', serverRoutes);
 
-let interval = 1000;
+let interval = 10000;
 // // Input interval time from user and set the value to the interval variable
 // const rl = readline.createInterface({
 //   input: process.stdin,
