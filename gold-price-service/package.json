@@ -1,0 +1,14 @@
+{
+    "name": "gold-price-service",
+    "version": "1.0.0",
+    "description": "API for gold price",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2"
+    }
+  }
+  
