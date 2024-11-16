@@ -10,3 +10,8 @@ services:
     build: ./forex-price-service
     ports:
       - "3002:3002"
+
+  server-health:
+    build: ./server-health
+    ports:
+      - "3003:3003"

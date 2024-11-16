@@ -1,17 +1,14 @@
 {
-    "name": "backend",
+    "name": "server-health",
     "version": "1.0.0",
-    "description": "backend",
-    "main": "index.js",
+    "description": "Server monitoring",
     "type": "module",
+    "main": "app.js",
     "scripts": {
         "start": "node app.js",
         "dev": "nodemon app.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "diskusage": "^1.2.0",
         "dotenv": "^16.4.5",
@@ -21,4 +18,5 @@
     "devDependencies": {
         "nodemon": "^3.1.7"
     }
-}
+  }
+  
