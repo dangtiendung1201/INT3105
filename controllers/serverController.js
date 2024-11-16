@@ -56,5 +56,5 @@ socket.on('checkServer', async (msg) => {
   console.log('message from server: ' + msg);
   const result = await checkServer({ json: () => {}, status: () => ({ json: () => {} }) });
   // console.log(result);
-  await ServerHealth.writeData(result.cpuUsage, result.memoryUsage, result.romUsage, result.bandwidth);
+  // await ServerHealth.writeData(result.cpuUsage, result.memoryUsage, result.romUsage, result.bandwidth);
 });
