@@ -1,11 +1,7 @@
 import express, { json } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-// import db from './config/db.js';
-// import apiRoutes from './routes/apiRoutes.js';
-// import containerRoutes from './routes/containerRoutes.js';
-// import serverRoutes from './routes/serverRoutes.js';
-import readline from 'readline';
+import ServerHealth from './models/ServerHealth.js';
 
 const app = express();
 const server = createServer(app);
@@ -15,48 +11,41 @@ const io = new Server(server, {
     methods: ['GET', 'POST']
   }
 });
-const PORT = 3001;
-const HOST = '0.0.0.0';
 
-// http://112.137.129.158:3001/
+const HOST = '0.0.0.0';
+const PORT = process.env.PORT || 3000;
+
+const interval = process.env.INTERVAL || 5000;
+const SERVER_NAME = process.env.SERVER_NAME || 'server0';
+
+console.log('PORT:', PORT);
+console.log('Interval:', interval);
+console.log('SERVER_NAME:', SERVER_NAME);
 
 // Middleware
 app.use(json());
 
-// Routes
-// app.use('/api', apiRoutes);
-// app.use('/container', containerRoutes);
-// app.use('/server', serverRoutes);
-
-let interval = 10000;
-// // Input interval time from user and set the value to the interval variable
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
-
-// rl.question('Enter interval time in milliseconds: ', (time) => {
-//   interval = time;
-//   rl.close();
-// });
-
 // Socket.io setup
 io.on('connection', (socket) => {
   console.log('New client connected');
-  // socket.on('startServerCheck', async ({ interval }) => {
-  //   setInterval(async () => {
-  //     const result = await healthChecks.checkServerHealth();
-  //     io.emit('serverHealthUpdate', result);
-  //     await ServerHealth.create(result);
-  //   }, interval);
-  // });
-  // After the interval time, send a message to the client
   setInterval(() => {
     socket.emit('checkServer', 'Checking server health...');
   }
-  , interval);
-  socket.on('serverUp', (msg) => {
+    , interval);
+  socket.on('serverHealth', async (msg) => {
     console.log('message from client: ' + msg);
+
+    // Print all contents of the message
+    console.log(msg);
+
+    // Print specific contents of the message
+    console.log('CPU Usage:', msg.cpuUsage);
+    console.log('Memory Usage:', msg.memoryUsage);
+    console.log('ROM Usage:', msg.romUsage);
+    console.log('Bandwidth:', msg.bandwidth);
+
+    // Write data to InfluxDB
+    await ServerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.romUsage, msg.bandwidth);
   });
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
