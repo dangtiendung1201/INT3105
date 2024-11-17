@@ -1,0 +1,11 @@
+services:
+  server-health:
+    build: ./server-health
+    ports:
+      - "3003:3003"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

@@ -13,7 +13,7 @@ const io = new Server(server, {
 });
 
 const HOST = '0.0.0.0';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 
 const interval = process.env.INTERVAL || 5000;
 const SERVER_NAME = process.env.SERVER_NAME || 'server0';
