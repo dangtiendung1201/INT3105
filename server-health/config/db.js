@@ -37,6 +37,7 @@ async function sendToInfluxDB(measurement, tags, fields) {
                 Authorization: `Bearer ${GRAFANA_USERNAME}:${GRAFANA_API_TOKEN}`,
                 'Content-Type': 'text/plain',
             },
+            httpAgent: new Agent({ keepAlive: true }),
         });
 
         // If the response is JSON, you can access it like this:
