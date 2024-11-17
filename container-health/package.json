@@ -1,0 +1,21 @@
+{
+    "name": "container-health",
+    "version": "1.0.0",
+    "description": "Container monitoring",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "dockerode": "^4.0.2",
+        "dockerstats": "^2.4.2",
+        "dotenv": "^16.4.5",
+        "socket.io-client": "^4.8.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
+}
