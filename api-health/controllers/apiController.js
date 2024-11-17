@@ -2,10 +2,10 @@ import ApiHealth from '../models/ApiHealth.js';
 import axios from 'axios';
 
 const acceptedStatusCodes = process.env.ACCEPTED_STATUS_CODES ? process.env.ACCEPTED_STATUS_CODES.split(',').map(Number) : [200];
+const timeout = process.env.TIMEOUT || 5000;
 
 export async function checkApi(req, res) {
     const { url } = req.body;
-    const timeout = 5000;
     try {
         const start = Date.now();
         const response = await axios.head(url, {
@@ -27,6 +27,7 @@ export async function checkApi(req, res) {
                 console.log('Error:', error);
             }
         }
+        res.status(200).send({ responseTime });
     } catch (error) {
         console.log('Error:', error.response ? error.response.status : error.message);
         try {
