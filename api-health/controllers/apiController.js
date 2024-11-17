@@ -1,12 +1,14 @@
 import ApiHealth from '../models/ApiHealth.js';
 import axios from 'axios';
 
+const acceptedStatusCodes = process.env.ACCEPTED_STATUS_CODES ? process.env.ACCEPTED_STATUS_CODES.split(',').map(Number) : [200];
+
 export async function checkApi(req, res) {
-    const { url, interval } = req.body;
+    const { url } = req.body;
     const timeout = 5000;
     try {
         const start = Date.now();
-        await axios.head(url, {
+        const response = await axios.head(url, {
             timeout: timeout,
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -15,13 +17,23 @@ export async function checkApi(req, res) {
             }
         });
         const responseTime = Date.now() - start;
-        // await ApiHealth.writeData( url, responseTime, 1 );
-        res.json({ responseTime, status: 'UP' });
+        console.log(responseTime);
+        if (acceptedStatusCodes.includes(response.status)) {
+            console.log("OK");
+            try {
+                await ApiHealth.writeData(url, responseTime, 1);
+            }
+            catch (error) {
+                console.log('Error:', error);
+            }
+        }
     } catch (error) {
-        // await ApiHealth.writeData( url, timeout, 0 );
-
-        console.log(error);
-
-        res.json({ status: 'DOWN' });
+        console.log('Error:', error.response ? error.response.status : error.message);
+        try {
+            await ApiHealth.writeData(url, timeout, 0);
+        }
+        catch (error) {
+            console.log('Error:', error);
+        }
     }
 }

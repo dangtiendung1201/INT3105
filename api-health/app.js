@@ -1,47 +1,34 @@
 import express, { json } from 'express';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import ServerHealth from './models/ServerHealth.js';
+import ServerHealth from './models/ApiHealth.js';
+import { checkApi } from './controllers/apiController.js';
 
 const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
 
 const HOST = '0.0.0.0';
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3001;
 
 const interval = process.env.INTERVAL || 5000;
-const SERVER_NAME = process.env.SERVER_NAME || 'server0';
+const timeout = process.env.TIMEOUT || 5000;
+
+const API_NAME = process.env.API_NAME || 'api0';
+const API_URL = process.env.API_URL || 'https://dantri.com.vn';
 
 console.log('PORT:', PORT);
+
 console.log('Interval:', interval);
-console.log('SERVER_NAME:', SERVER_NAME);
+console.log('Timeout:', timeout);
+
+console.log('API_NAME:', API_NAME);
+console.log('API_URL:', API_URL);
 
 // Middleware
 app.use(json());
 
-// Socket.io setup
-io.on('connection', (socket) => {
-  console.log('New client connected');
-  setInterval(() => {
-    socket.emit('checkServer', 'Checking server health...');
-  }
-    , interval);
-  socket.on('serverHealth', async (msg) => {
-    // Print all contents of the message
-    console.log(msg);
+// Call the checkApi function every interval
+setInterval(() => {
+    checkApi({ body: { url: API_URL } });
+}, interval);
 
-    // Write data to InfluxDB
-    await ServerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.romUsage, msg.bandwidth);
-  });
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
-
-server.listen(PORT, HOST, () => {
-  console.log(`Server running on ${HOST}:${PORT}`);
+app.listen(PORT, HOST, () => {
+    console.log(`Server running on ${HOST}:${PORT}`);
 });
