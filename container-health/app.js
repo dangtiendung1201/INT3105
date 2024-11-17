@@ -16,11 +16,11 @@ const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3002;
 
 const interval = process.env.INTERVAL || 5000;
-const CONTAINER_NAME = process.env.CONTAINER_NAME || 'container0';
+const CONTAINER_ID = process.env.CONTAINER_ID || 'container0';
 
 console.log('PORT:', PORT);
 console.log('Interval:', interval);
-console.log('CONTAINER_NAME:', CONTAINER_NAME);
+console.log('CONTAINER_ID:', CONTAINER_ID);
 
 // Middleware
 app.use(json());
@@ -29,7 +29,7 @@ app.use(json());
 io.on('connection', (socket) => {
   console.log('New client connected');
   setInterval(() => {
-    socket.emit('checkContainer', 'Checking container health...');
+    socket.emit('checkContainer', CONTAINER_ID);
   }
     , interval);
   socket.on('containerHealth', async (msg) => {
@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     console.log(msg);
 
     // Write data to InfluxDB
-    await ContainerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.romUsage, msg.bandwidth);
+    await ContainerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.netInput, msg.netOutput, msg.blockInput, msg.blockOutput, msg.healthStatus);
   });
   socket.on('disconnect', () => console.log('Client disconnected'));
 });

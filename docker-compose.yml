@@ -5,6 +5,13 @@ services:
       - "3001:3001"
     networks:
       - my-network
+    
+  container-health:
+    build: ./container-health
+    ports:
+      - "3002:3002"
+    networks:
+      - my-network
 
   server-health:
     build: ./server-health
