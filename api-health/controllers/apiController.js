@@ -27,7 +27,6 @@ export async function checkApi(req, res) {
                 console.log('Error:', error);
             }
         }
-        res.status(200).send({ responseTime });
     } catch (error) {
         console.log('Error:', error.response ? error.response.status : error.message);
         try {

@@ -1,4 +1,11 @@
 services:
+  api-health:
+    build: ./api-health
+    ports:
+      - "3001:3001"
+    networks:
+      - my-network
+
   server-health:
     build: ./server-health
     ports:
