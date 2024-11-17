@@ -5,5 +5,5 @@ COPY package.json .
 COPY .env .
 RUN npm install
 COPY . .
-EXPOSE 3003
+EXPOSE 6003
 CMD ["npm", "start"]

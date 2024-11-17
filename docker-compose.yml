@@ -17,7 +17,7 @@ services:
   server-health:
     build: ./server-health
     ports:
-      - "3003:3003"
+      - "6003:6003"
     networks:
       - my-network
 
