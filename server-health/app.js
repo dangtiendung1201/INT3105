@@ -59,6 +59,11 @@ socket.on('disconnect', () => {
 socket.on('checkServer', async (msg) => {
   console.log('message from server: ' + msg);
   const result = await checkServer({ json: () => {}, status: () => ({ json: () => {} }) });
-  // console.log(result);
-  await ServerHealth.writeData(result.cpuUsage, result.memoryUsage, result.romUsage, result.bandwidth);
+  console.log(result);
+  
+  // Send data to the database
+  // await ServerHealth.writeData(result.cpuUsage, result.memoryUsage, result.romUsage, result.bandwidth);
+
+  // Send message to socket server
+  socket.emit('serverHealth', result);
 });

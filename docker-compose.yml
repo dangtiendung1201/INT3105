@@ -1,17 +1,26 @@
-# docker-compose.yml
 version: '3'
 services:
   gold-price-service:
     build: ./gold-price-service
     ports:
       - "3001:3001"
+    networks:
+      - my-network
 
   forex-price-service:
     build: ./forex-price-service
     ports:
       - "3002:3002"
+    networks:
+      - my-network
 
   server-health:
     build: ./server-health
     ports:
       - "3003:3003"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
