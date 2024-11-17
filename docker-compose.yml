@@ -20,6 +20,13 @@ services:
     networks:
       - my-network
 
+  traffic:
+    build: ./traffic
+    ports:
+      - "3004:3004"
+    networks:
+      - my-network
+      
 networks:
   my-network:
     driver: bridge
