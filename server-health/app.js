@@ -33,16 +33,8 @@ io.on('connection', (socket) => {
   }
     , interval);
   socket.on('serverHealth', async (msg) => {
-    console.log('message from client: ' + msg);
-
     // Print all contents of the message
     console.log(msg);
-
-    // Print specific contents of the message
-    console.log('CPU Usage:', msg.cpuUsage);
-    console.log('Memory Usage:', msg.memoryUsage);
-    console.log('ROM Usage:', msg.romUsage);
-    console.log('Bandwidth:', msg.bandwidth);
 
     // Write data to InfluxDB
     await ServerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.romUsage, msg.bandwidth);

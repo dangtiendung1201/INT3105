@@ -40,26 +40,12 @@ async function sendToInfluxDB(measurement, tags, fields) {
             httpAgent: new Agent({ keepAlive: true }),
         });
 
-        // If the response is JSON, you can access it like this:
+        // Print the response
         console.log(response.data);
         console.log('Metric sent to InfluxDB:', body);
     } catch (error) {
         console.error('Error posting data:', error);
     }
-
-    // try {
-    //     await axiosInstance.post('/api/v1/push/influx/write', body);
-    //     console.log('Metric sent to InfluxDB:', body);
-    // } catch (error) {
-    //     console.error('Error sending metric to InfluxDB:', error.message);
-    // }
-
-    // try {
-    //     const response = await axiosInstance.post('', body);
-    //     console.log('Metric sent to InfluxDB:', body);
-    // } catch (error) {
-    //     console.error('Error sending metric to InfluxDB:', error.message);
-    // }
 }
 
 export default { sendToInfluxDB };

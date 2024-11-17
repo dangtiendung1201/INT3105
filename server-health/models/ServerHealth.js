@@ -10,7 +10,6 @@ class ServerHealth {
     const measurement = 'server_health';
     const tags = { host: SERVER_NAME };
     const fields = { cpuUsage, memoryUsage, romUsage, bandwidth };
-    console.log('hihi');
     await db.sendToInfluxDB(measurement, tags, fields);
   }
 }
