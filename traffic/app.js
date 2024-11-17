@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-// import Traffic from './models/Traffic.js';
+import Traffic from './models/Traffic.js';
 
 dotenv.config();
 
