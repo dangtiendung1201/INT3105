@@ -16,6 +16,7 @@ const socket = io(SOCKET_URL);
 
 app.use(morgan('combined'), (req, res, next) => {
     socket.emit(NAMETAG, '1');
+    console.log(1);
     next();
 });
 
