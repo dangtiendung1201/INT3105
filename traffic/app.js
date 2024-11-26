@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
   console.log('New client connected');
 
   // Listen on the 'traffic' event named in TRAFFIC_NAMETAG
-  TRAFFIC_NAMETAG.forEach((nameTag) => {
+  TRAFFIC_NAMES.forEach((nameTag) => {
     socket.on(nameTag, (msg) => {
       // Print all contents of the message
       console.log(msg);
