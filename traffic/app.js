@@ -37,9 +37,10 @@ io.on('connection', (socket) => {
     socket.on(nameTag, (msg) => {
       // Print all contents of the message
       console.log(msg);
+      console.log(nameTag);
 
       // Write data to InfluxDB concurrently
-      Traffic.writeData(msg.nameTag, 1).catch((err) => {
+      Traffic.writeData(nameTag, 1).catch((err) => {
         console.error(`Error writing data for ${nameTag}:`, err);
       });
     });
