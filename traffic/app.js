@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
       console.log(nameTag);
 
       // Write data to InfluxDB concurrently
-      Traffic.writeData(nameTag, 1).catch((err) => {
+      Traffic.writeData(nameTag, msg.trafficCounter, msg.cpuUsage, msg.memoryUsage).catch((err) => {
         console.error(`Error writing data for ${nameTag}:`, err);
       });
     });
