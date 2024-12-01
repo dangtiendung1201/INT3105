@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { io } from 'socket.io-client';
+import pidusage from 'pidusage';
  
 dotenv.config();
 
@@ -16,7 +17,29 @@ const socket = io(SOCKET_URL);
 
 var trafficCounter = 0;
 
-app.use(morgan('combined'), (req, res, next) => {
+app.use(morgan('combined'));
+
+// Middleware đo lường tài nguyên
+app.use((req, res, next) => {
+    pidusage(process.pid, (err, stats) => {
+        if (err) {
+            console.error("Error getting stats:", err);
+            return;
+        }
+
+        const cpuUsage = stats.cpu;
+        const memoryUsage = (stats.memory / 1024 / 1024).toFixed(2); // MB
+
+        // In thông số hệ thống vào console
+        console.log(`CPU Usage: ${cpuUsage}%`);
+        console.log(`Memory Usage: ${memoryUsage} MB`);
+
+        // Gọi next() sau khi đo lường xong
+        next();
+    });
+});
+
+app.use((req, res, next) => {
     trafficCounter++;
     socket.emit(NAMETAG, trafficCounter);
     console.log(1);
