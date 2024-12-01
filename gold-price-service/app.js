@@ -29,21 +29,19 @@ app.use((req, res, next) => {
 
         const cpuUsage = stats.cpu;
         const memoryUsage = (stats.memory / 1024 / 1024).toFixed(2); // MB
-        
+
         // In thông số hệ thống vào console
         console.log(`CPU Usage: ${cpuUsage}%`);
         console.log(`Memory Usage: ${memoryUsage} MB`);
 
+        // Increment traffic counter and emit event
+        trafficCounter++;
+
+        socket.emit(NAMETAG, { trafficCounter, cpuUsage, memoryUsage });
+
         // Gọi next() sau khi đo lường xong
         next();
     });
-});
-
-app.use((req, res, next) => {
-    trafficCounter++;
-    socket.emit(NAMETAG, '1');
-    console.log(1);
-    next();
 });
 
 app.get('/gold-price', (req, res) => {

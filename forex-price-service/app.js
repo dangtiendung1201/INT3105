@@ -19,7 +19,6 @@ var trafficCounter = 0;
 
 app.use(morgan('combined'));
 
-// Middleware đo lường tài nguyên
 app.use((req, res, next) => {
     pidusage(process.pid, (err, stats) => {
         if (err) {
@@ -34,16 +33,14 @@ app.use((req, res, next) => {
         console.log(`CPU Usage: ${cpuUsage}%`);
         console.log(`Memory Usage: ${memoryUsage} MB`);
 
+        // Increment traffic counter and emit event
+        trafficCounter++;
+
+        socket.emit(NAMETAG, { trafficCounter, cpuUsage, memoryUsage });
+
         // Gọi next() sau khi đo lường xong
         next();
     });
-});
-
-app.use((req, res, next) => {
-    trafficCounter++;
-    socket.emit(NAMETAG, trafficCounter);
-    console.log(1);
-    next();
 });
 
 app.get('/forex-price', (req, res) => {
