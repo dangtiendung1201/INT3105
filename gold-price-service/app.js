@@ -14,8 +14,11 @@ const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:3000';
 console.log('SOCKET_URL:', SOCKET_URL);
 const socket = io(SOCKET_URL);
 
+var trafficCounter = 0;
+
 app.use(morgan('combined'), (req, res, next) => {
-    socket.emit(NAMETAG, '1');
+    trafficCounter++;
+    socket.emit(NAMETAG, trafficCounter);
     console.log(1);
     next();
 });
