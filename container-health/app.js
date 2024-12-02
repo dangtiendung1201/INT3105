@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3002;
 
 const interval = process.env.INTERVAL || 5000;
 const CONTAINER_IDS = process.env.CONTAINER_ID.split(',');
+const SECRET_KEY = process.env.SECRET_KEY || 'secret';
 
 console.log('PORT:', PORT);
 console.log('Interval:', interval);
@@ -29,7 +30,7 @@ app.use(json());
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   console.log('Token:', token);
-  if (token === 'secret') {
+  if (token === SECRET_KEY) {
     return next();
   }
   return next(new Error('Authentication error'));
