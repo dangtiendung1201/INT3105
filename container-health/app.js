@@ -8,8 +8,13 @@ const docker = new Docker();
 dotenv.config();
 
 const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:3000';
+const SECRET_KEY = process.env.SECRET_KEY || 'secret';
 console.log('SOCKET_URL:', SOCKET_URL);
-const socket = io(SOCKET_URL);
+const socket = io(SOCKET_URL, {
+  auth: {
+    token: SECRET_KEY
+  }
+});
 
 export async function checkContainer(containerID, res) {
   try {
@@ -59,5 +64,5 @@ socket.on('checkContainer', async (msg) => {
   console.log(result);
 
   // Send message to socket server
-  socket.emit('containerHealth', result);
+  socket.emit(msg, result);
 });
