@@ -16,28 +16,43 @@ const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3002;
 
 const interval = process.env.INTERVAL || 5000;
-const CONTAINER_ID = process.env.CONTAINER_ID || 'container0';
+const CONTAINER_IDS = process.env.CONTAINER_ID.split(',');
 
 console.log('PORT:', PORT);
 console.log('Interval:', interval);
-console.log('CONTAINER_ID:', CONTAINER_ID);
+console.log('CONTAINER_ID:', CONTAINER_IDS);
 
 // Middleware
 app.use(json());
 
 // Socket.io setup
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  console.log('Token:', token);
+  if (token === 'secret') {
+    return next();
+  }
+  return next(new Error('Authentication error'));
+});
+
 io.on('connection', (socket) => {
   console.log('New client connected');
-  setInterval(() => {
-    socket.emit('checkContainer', CONTAINER_ID);
-  }
-    , interval);
-  socket.on('containerHealth', async (msg) => {
-    // Print all contents of the message
-    console.log(msg);
+  CONTAINER_IDS.forEach((id) => {
+    setInterval(() => {
+      socket.emit('checkContainer', id);
+    }, interval);
+  });
+  CONTAINER_IDS.forEach((id) => {
+    socket.on(id, (msg) => {
+      // Print all contents of the message
+      console.log(msg);
+      console.log(id);
 
-    // Write data to InfluxDB
-    await ContainerHealth.writeData(msg.cpuUsage, msg.memoryUsage, msg.netInput, msg.netOutput, msg.blockInput, msg.blockOutput, msg.healthStatus);
+      // Write data to InfluxDB concurrently
+      ContainerHealth.writeData(id, msg.cpuUsage, msg.memoryUsage, msg.netInput, msg.netOutput, msg.blockInput, msg.blockOutput, msg.healthStatus).catch((err) => {
+        console.error(`Error writing data for ${id}:`, err);
+      });
+    });
   });
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
