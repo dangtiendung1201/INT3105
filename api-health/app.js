@@ -1,5 +1,4 @@
 import express, { json } from 'express';
-import ServerHealth from './models/ApiHealth.js';
 import { checkApi } from './controllers/apiController.js';
 
 const app = express();
@@ -10,23 +9,26 @@ const PORT = process.env.PORT || 3001;
 const interval = process.env.INTERVAL || 5000;
 const timeout = process.env.TIMEOUT || 5000;
 
-const API_NAME = process.env.API_NAME || 'api0';
-const API_URL = process.env.API_URL || 'https://dantri.com.vn';
+const API_NAMES = process.env.API_NAME.split(',');
+const API_URLS = process.env.API_URL.split(',');
 
 console.log('PORT:', PORT);
 
 console.log('Interval:', interval);
 console.log('Timeout:', timeout);
 
-console.log('API_NAME:', API_NAME);
-console.log('API_URL:', API_URL);
+console.log('API_NAME:', API_NAMES);
+console.log('API_URL:', API_URLS);
 
 // Middleware
 app.use(json());
 
 // Call the checkApi function every interval
 setInterval(() => {
-    checkApi({ body: { url: API_URL } });
+    // checkApi({ body: { url: API_URL } });
+    API_NAMES.forEach((name, index) => {
+        checkApi({ body: { url: API_URLS[index] } });
+    });
 }, interval);
 
 app.listen(PORT, HOST, () => {
